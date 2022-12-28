@@ -1,0 +1,47 @@
+1.0 Check
+
+    For the layer to run properly the format of the matrices has to be correct. the check() function checks for the dimensions of the amtrices/vectors:
+
+
+2.0 Layer:
+
+    2.1 Matrix-Vector Multiplication: (https://towardsdatascience.com/dot-product-in-linear-algebra-for-data-science-using-python-f113fb60c8f)
+
+        Weights        Values               Total
+
+        [1 1 0]         [0]         [1*0  + 1*1  + 0*0]       [1]
+        [0 1 0]    *    [1]    =    [0*0  + 1*1  + 0*0]   =   [1]
+                        [0]         
+    
+    3.2 Matrix-Vector Addition (https://medium.com/@khannashrey07/linear-algebra-for-deep-learning-7e336ebc0da0)
+
+        Total      Biases
+
+        [1]          [0.4]        [1.4]
+        [1]     +    [0.8]    =   [1.8]
+
+
+3.0 Sigmoid function: (https://machinelearningmastery.com/a-gentle-introduction-to-sigmoid-function/)
+
+    Activation Function for Neural Networks - Función que asigna un numero entre (0, 1) a x
+
+    S(x) = 1/[1+e^(-x)]
+
+    Apply sigmoid function to all elements of a matrix:
+
+
+4.0 Run 
+
+    Function that is in charge of running every layer of the Network.
+
+5.0 Cost
+
+    Para entrenar una inteligencia artificial es importante saber como de bien rinde en cada uno de los intentos. Para ello se calcula una variable cost, que es inversamente proporcional a como de cerca está la red de la respuesta.
+    Si coste = 0, la inteligencia funcionar
+
+
+BUG APARENTE:
+
+    Cuando se multiplican matrices muy grandes, por el funcionamiento del punto 2.1, se suman todos los valores, dando un número relativamente grande. 
+    Pasado por la función sigmoid da un número muy cercano a 1 (S() = ), y la "impresición" del ordenador asume que es 1. Por eso, en capas con matrices muy grandes (784 por ejemplo) la respuesta es todo 1.
+    Esto se arreglara con el entreamiento y ajustando los weights/bias.
