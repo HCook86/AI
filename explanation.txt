@@ -13,6 +13,8 @@
         [0 1 0]    *    [1]    =    [0*0  + 1*1  + 0*0]   =   [1]
                         [0]         
     
+    # Annotation: This is incorrect. Vector + Vector Addition
+    
     3.2 Matrix-Vector Addition (https://medium.com/@khannashrey07/linear-algebra-for-deep-learning-7e336ebc0da0)
 
         Total      Biases
