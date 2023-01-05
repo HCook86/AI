@@ -1,16 +1,21 @@
 #See explanation.txt for code explanations
 
+# SOURCE 
+# Math and explanations -->     https://www.3blue1brown.com/topics/neural-networks
+# Numpy documentation -->     https://numpy.org/doc/stable/
+# Progress bar  --> https://github.com/rsalmei/alive-progress
+
 import numpy as np 
 import logging
-from json import JSONEncoder, dumps
 from utils import NumpyEncoder
+from alive_progress import alive_bar
 
 #Set up basic logging module configuration
 logging.basicConfig(filename='history.log', encoding='utf-8', level=logging.DEBUG)
 
 class Network():
 
-    # Generate random data in specific format
+    # Generate random weights and biases in specific format
     def generate_data(self, layers_nodes):
         data = list()
         layer_number = 0
@@ -25,7 +30,7 @@ class Network():
                 layer_data = (np.random.random((layer, layers_nodes[layer_number-1])), np.random.random((layer, 1)))
             data.append(layer_data)
             layer_number += 1
-        logging.debug("RANDOM DATA GENERATED: \n ")
+        logging.debug("RANDOM WEIGHTS AND BIASES GENERATED: \n ")
         return data
 
 
@@ -34,14 +39,18 @@ class Network():
         self.input_layer = node_structure[0]
         self.structure = node_structure
         self.data = self.generate_data(node_structure)
-    
 
-    # Save current weights and biases to file
-    def save_to_file(self):
-        json_data = dumps(self.data, cls=NumpyEncoder)
-        handler = open("data.json", "w")
-        handler.write(json_data)
-        handler.close()
+
+    # Save current data to a .txt file
+    def save_to_file(self, file_name):
+        logging.debug("DATA SAVED TO " + file_name + "\n-----------------------\n")
+        np.savetxt(file_name, self.data_to_vector())
+
+
+    # Load data from specified .txt file
+    def load_from_file(self, file_name):
+        logging.debug("DATA LOADED FROM " + file_name + "\n------------------------\n")
+        self.data = self.vector_to_data(np.loadtxt(file_name))
 
 
     # Define the sigmoid function
@@ -105,19 +114,19 @@ class Network():
                 logging.debug("\n\n---------------------------\n")
                 print(str(weights))
                 print(str(biases))
-                raise ValueError("Check Failed")
+                raise ValueError("Format Check Failed")
         else: 
             logging.critical("CHECK FAILED: (weights and biases don't match)")
             logging.debug("\n\n---------------------------\n")
             print(str(weights))
             print(str(biases))
-            raise ValueError("Check Failed")
+            raise ValueError("Format Check Failed")
 
 
     # Run individual layer
     def layer(self, weights, values, biases):
         # Log process
-        logging.debug("LAYER INFO: \n    Input-Nodes: " + str(weights.shape[1]) + "\n    Output-Nodes:" + str(biases.shape[0]) +"\n    weights: \n" + str(weights) + "\n    values: \n" + str(values) +  "\n    biases: \n" + str(biases))
+        # logging.debug("LAYER INFO: \n    Input-Nodes: " + str(weights.shape[1]) + "\n    Output-Nodes:" + str(biases.shape[0]) +"\n    weights: \n" + str(weights) + "\n    values: \n" + str(values) +  "\n    biases: \n" + str(biases))
         
         # Multiply the matrices and add the biases
         calc = np.add((weights @ values), biases)
@@ -130,8 +139,6 @@ class Network():
         logging.debug("\n\n---------------------------\n")
         return ans
 
-    def cost(self):
-        return None
 
     # Calculate cost of individual run. More information in explanation.txt
     def error_for_run(self, expected, output):
@@ -140,12 +147,13 @@ class Network():
         logging.debug("COST CALCULATION: \n    Expected:    " + str(expected) + "\n    Output:    " + str(output) + "\n    Error:     " + str(error) + "\n\n---------------------------\n")
         return error
 
+
     # Main function to run all layers of the network. Only takes input values as argument, and gets others from self.data
     # Data has the following structure:     layer 1             layer2              layer3
     #                                   [(weights, biases),(weights, biases),(weights, biases)]
     def run(self, initial_values):
         data = self.data
-        logging.debug("\n\n ------------------------------------ ITERATION " + "" + "-------------------------------------------\n")
+        logging.debug("\n\n ------------------------------------ RUN " + "-------------------------------------------\n")
 
         # current_values variable is given the first time as user input. Then the values are stored from the previous layer
         current_values = initial_values
@@ -156,7 +164,7 @@ class Network():
         for layer_data in data:
             layer_number += 1
             # Check and run each layer
-            logging.debug("RUNNING CHECK ON LAYER: " + str(layer_number))
+            logging.debug("RUNNING FORMAT CHECK ON LAYER: " + str(layer_number))
             self.check(layer_data[0], current_values, layer_data[1])
 
             logging.debug("RUNNING LAYER: " + str(layer_number))
@@ -168,11 +176,28 @@ class Network():
 
 
 
+
+
+    # Function to train the AI
+    def train(self, training_data):
+        with alive_bar(len(training_data)) as bar:
+            for element in training_data:
+                bar()
+        return None
+
+    # Cost function
+    def cost(self, data_vector):
+        global_cost = None
+        return global_cost
+
+
 net = Network([784,16,16,10])
 
+print(net.data)
 
-print((str(net.vector_to_data(net.data_to_vector())) == str(net.data)))
-net.save_to_file()
+#net.train([1])
+
+#net.run(net.generate(784,1))
 
 #net.cost(net.run(np.random.random((784, 1))), np.array([0,0,0,0,0,0,0,0,0,1]))
 
