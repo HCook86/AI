@@ -11,7 +11,7 @@ from utils import NumpyEncoder
 from alive_progress import alive_bar
 
 #Set up basic logging module configuration
-logging.basicConfig(filename='history.log', encoding='utf-8', level=logging.DEBUG)
+logging.basicConfig(filename='history.log', encoding='utf-8', level=logging.CRITICAL)
 
 class Network():
 
@@ -20,7 +20,6 @@ class Network():
         data = list()
         layer_number = 0
         input_layer = layers_nodes.pop(0)
-
         for layer in layers_nodes:
             layer_data = tuple()
             if layer_number == 0:
@@ -31,14 +30,18 @@ class Network():
             data.append(layer_data)
             layer_number += 1
         logging.debug("RANDOM WEIGHTS AND BIASES GENERATED: \n ")
+
         return data
 
 
     # Initialization function. Generate all the data randomly on object creation and store shape in object
-    def __init__(self, node_structure):
+    def __init__(self, node_structure, generate = True):
         self.input_layer = node_structure[0]
         self.structure = node_structure
-        self.data = self.generate_data(node_structure)
+        if generate == True:
+            self.data = self.generate_data(node_structure)
+        else:
+            self.data = None
 
 
     # Save current data to a .txt file
@@ -126,8 +129,9 @@ class Network():
     # Run individual layer
     def layer(self, weights, values, biases):
         # Log process
-        # logging.debug("LAYER INFO: \n    Input-Nodes: " + str(weights.shape[1]) + "\n    Output-Nodes:" + str(biases.shape[0]) +"\n    weights: \n" + str(weights) + "\n    values: \n" + str(values) +  "\n    biases: \n" + str(biases))
-        
+        logging.debug("LAYER INFO: \n    Input-Nodes: " + str(weights.shape[1]) + "\n    Output-Nodes:" + str(biases.shape[0]) +"\n")
+        # logging.debug("weights: \n" + str(weights) + "\n    values: \n" + str(values) +  "\n    biases: \n" + str(biases")
+
         # Multiply the matrices and add the biases
         calc = np.add((weights @ values), biases)
 
@@ -179,9 +183,17 @@ class Network():
 
 
     # Function to train the AI
-    def train(self, training_data):
-        with alive_bar(len(training_data)) as bar:
-            for element in training_data:
+    def train(self, iterations, training_data):
+        with alive_bar(iterations) as bar:
+            for i in range(iterations):
+                error_vector = np.empty(0)
+                for element in training_data:
+                    expected = np.zeros(shape=(1, 10))
+                    np.put(expected, element[1]-1, 1)
+                    run_error = self.error_for_run(expected, self.run(element[0].reshape((784,1))))
+                    error_vector = np.append(error_vector, run_error)
+                total_error = np.average(error_vector)
+
                 bar()
         return None
 
@@ -192,30 +204,3 @@ class Network():
 
 
 net = Network([784,16,16,10])
-
-print(net.data)
-
-#net.train([1])
-
-#net.run(net.generate(784,1))
-
-#net.cost(net.run(np.random.random((784, 1))), np.array([0,0,0,0,0,0,0,0,0,1]))
-
-#net.cost(net.run([(net.generate(16,784), net.generate(16,1)), ((net.generate(16,16), net.generate(16,1))), (net.generate(10,16), net.generate(10,1))], net.generate(784,1)), np.array([0,0,0,0,0,0,0,0,0,1]))
-
-
-#This line works (1 Dimension) WRONG: MATRIX TRANPOSED
-#print(net.layer(np.array([[0, 1, 0]]), np.array([[1], [0], [0]]), np.array([[1]])))
-#print(net.check(np.array([[0, 1, 0]]), np.array([[1], [0], [0]]), np.array([[1]])))
-
-
-#This works (2 Dimensions) CORRECT! MATRICES NOT TRANSPOSED
-#net.check(np.array([[0, 1, 0],[0, 1, 0]]), np.array([1, 0, 0]), np.array([1, 1]))
-#net.layer(np.array([[0, 1, 0],[0, 1, 0]]), np.array([1, 0, 0]), np.array([1, 1]))
-
-
-#This works (More than one layer)
-#print(net.cost(np.array([1]) , net.run([(np.array([[1, 1, 0],[0, 1, 0]]), np.array([[0], [0]])),     (np.array([[1, 1]]), np.array([[1]]))], np.array([[1], [0], [0]]))))
-
-
-#net.run([(np.array([[0, 1, 0],[0, 1, 0]]), np.array([1, 1])),     (np.array([[0, 1, 0],[0, 1, 0]]), np.array([1, 1]))], np.array([1, 0, 0]))
