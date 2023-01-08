@@ -1,6 +1,6 @@
 1.0 Check
 
-    For the layer to run properly the format of the matrices has to be correct. the check() function checks for the dimensions of the amtrices/vectors:
+    For the layer to run properly the dimensions of the matrices has to be correct. the check() function checks for the dimensions of the matrices/vectors:
 
 
 2.0 Layer:
@@ -38,12 +38,17 @@
 
 5.0 Cost
 
-    Para entrenar una inteligencia artificial es importante saber como de bien rinde en cada uno de los intentos. Para ello se calcula una variable cost, que es inversamente proporcional a como de cerca está la red de la respuesta.
-    Si coste = 0, la inteligencia funcionar
+    Para entrenar una inteligencia artificial es importante saber como de bien rinde en cada uno de los intentos. Para ello se calcula una variable error, que es inversamente proporcional a como de cerca está la red de la respuesta.
+    Cuanto más cercano a 0 sea el valor mejor está rindiendo la inteligencia artificial. Esto se mide utilizando MSE (Meaned Squared Error)
+    Se calucla de la siguiente manera: MSE = (1/n) * Σ(valor_real – valor_esperado)² (n siendo el numero de valores que se evaluan)
 
+6.0 Train (Gradient Descent)
+    v→v′=v−η∇C(v) (v=old value, η=)
 
 BUG APARENTE:
 
     Cuando se multiplican matrices muy grandes, por el funcionamiento del punto 2.1, se suman todos los valores, dando un número relativamente grande. 
     Pasado por la función sigmoid da un número muy cercano a 1 (S() = ), y la "impresición" del ordenador asume que es 1. Por eso, en capas con matrices muy grandes (784 por ejemplo) la respuesta es todo 1.
     Esto se arreglara con el entreamiento y ajustando los weights/bias.
+    
+    I don't understand what you mean. I have a function that takes all my weights and biases (just decimal numbers) as an input and outputs a decimal number, representing how right or wrong the guess the AI made was. (closest to 0 meaning the guess was better). To update my weights and biases I am supposed to use this method called gradient descent. v→v′=v−η∇C . Here v represents my weights and biases, η the learning rate and C my cost function (mentioned earlyer. )
