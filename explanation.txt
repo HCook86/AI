@@ -7,20 +7,20 @@
 
     2.1 Matrix-Vector Multiplication: (https://towardsdatascience.com/dot-product-in-linear-algebra-for-data-science-using-python-f113fb60c8f)
 
-        Weights        Values               Total
+        Weights        Values               Total           Total Vector
 
         [1 1 0]         [0]         [1*0  + 1*1  + 0*0]       [1]
         [0 1 0]    *    [1]    =    [0*0  + 1*1  + 0*0]   =   [1]
                         [0]         
     
-    # Annotation: This is incorrect. Vector + Vector Addition
     
-    3.2 Matrix-Vector Addition (https://medium.com/@khannashrey07/linear-algebra-for-deep-learning-7e336ebc0da0)
+    3.2 Vector Addition (https://medium.com/@khannashrey07/linear-algebra-for-deep-learning-7e336ebc0da0)
 
         Total      Biases
 
         [1]          [0.4]        [1.4]
         [1]     +    [0.8]    =   [1.8]
+        [0]          [0.2]        [0.2]
 
 
 3.0 Sigmoid function: (https://machinelearningmastery.com/a-gentle-introduction-to-sigmoid-function/)
@@ -28,13 +28,14 @@
     Activation Function for Neural Networks - Función que asigna un numero entre (0, 1) a x
 
     S(x) = 1/[1+e^(-x)]
-
-    Apply sigmoid function to all elements of a matrix:
-
+    
+    Esto es necesario para luego usar el método de "Back Propagation". Por ello se aplica la función en cada elemento de la matriz resultante de: (w*v)+b
+    
 
 4.0 Run 
 
     Function that is in charge of running every layer of the Network.
+
 
 5.0 Cost
 
